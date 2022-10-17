@@ -1,0 +1,93 @@
+<html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:th="http://www.thymeleaf.org"
+      layout:decorate = "~{common/layout.html}" lang="ko">
+
+<div layout:fragment = "content" class = "container my-3 text-center">
+  <div class = "my-5">
+    <div>
+      <h4>회원 가입</h4>
+    </div>
+  </div>
+  <div>
+    <script type="text/javascript">
+      let MemberJoin__submitDone = false;
+
+      function MemberJoin__submit(form) {
+        if (MemberJoin__submitDone) {
+          return;
+        }
+
+        form.username.value = form.username.value.trim();
+
+        console.log(form.username.value);
+        if (form.username.value.length === 0) {
+          warningModal('아이디를 입력해주세요.');
+          form.username.focus();
+          return;
+        }
+
+        form.password.value = form.password.value.trim();
+
+        if (form.password.value.length === 0) {
+          warningModal("비밀번호를 입력해주세요.");
+          form.password.focus();
+          return;
+        }
+
+        form.password2.value = form.password2.value.trim();
+
+        if (form.password.value !== form.password2.value) {
+          warningModal("비밀번호가 일치하지 않습니다.");
+          form.password2.focus();
+          return;
+        }
+
+        form.nickname.value = form.nickname.value.trim();
+
+        if (form.nickname.value.length === 0) {
+          warningModal("닉네임을 입력해주세요.");
+          form.nickname.focus();
+          return;
+        }
+
+
+        form.email.value = form.email.value.trim();
+
+        if (form.email.value.length === 0) {
+          warningModal("이메일을 입력해주세요.");
+          form.email.focus();
+
+          return;
+        }
+
+        form.submit();
+        MemberJoin__submitDone = true;
+      }
+    </script>
+
+    <form th:action="@{/member/join}" method="post" onsubmit="MemberJoin__submit(this); return false;">
+      <div class = "mb-3">
+        <label class = "form-label">아이디
+          <input autofocus type="text" name="username" class = "form-control" maxlength="50"></label>
+      </div>
+      <div class = "mb-3">
+        <label class = "form-label">비밀번호
+          <input type="password" name="password" class = "form-control" maxlength="50"></label>
+      </div>
+      <div class = "mb-3">
+        <label class = "form-label">비밀번호 확인
+          <input type= "password" name="password2" class = "form-control" maxlength="50"></label>
+      </div>
+      <div class = "mb-3">
+        <label class = "form-label">닉네임
+          <input type= "text" name="nickname" class = "form-control" maxlength="50"></label>
+      </div>
+      <div class = "mb-3">
+        <label class = "form-label">이메일
+          <input type="email" name="email" class = "form-control" maxlength="50"></label>
+      </div>
+      <button type = "submit" class = "btn btn-primary">회원 가입</button>
+    </form>
+  </div>
+</div>
+
