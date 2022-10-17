@@ -35,4 +35,12 @@ public class MemberController {
     memberService.join(joinDto);
     return "redirect:/";
   }
+
+  /*
+  로그인
+   */
+  @GetMapping("/login")
+  public String login(){
+    return "member/login";
+  }
 }

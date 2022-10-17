@@ -1,7 +1,5 @@
 package com.example.app.config;
 
-import static org.springframework.security.config.http.SessionCreationPolicy.*;
-
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -9,6 +7,7 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
 @EnableWebSecurity
 @RequiredArgsConstructor
@@ -21,12 +20,20 @@ public class SecurityConfig {
         .csrf().disable()
         .httpBasic().disable()
         .formLogin().disable()
-        .sessionManagement().sessionCreationPolicy(STATELESS)
-        .and()
         .authorizeRequests()
         .antMatchers("/css/**","/js/**").permitAll()
-        .antMatchers("/", "/member/join").permitAll()
-        .anyRequest().hasAnyRole("MEMBER", "ADMIN");
+        .antMatchers("/", "/member/join", "/member/login").permitAll()
+        .anyRequest().authenticated()
+        .and()
+        .formLogin()
+        .loginPage("/member/login")
+        .defaultSuccessUrl("/")
+        .and()
+        .logout()
+        .logoutRequestMatcher(new AntPathRequestMatcher("/member/logout"))
+        .logoutSuccessUrl("/")
+        .invalidateHttpSession(true)
+    ;
 
     return http.build();
   }

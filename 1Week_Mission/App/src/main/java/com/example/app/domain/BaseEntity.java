@@ -37,7 +37,7 @@ public class BaseEntity {
   private Long id;
 
   @CreatedDate
-  private LocalDateTime createdDate;
+  private LocalDateTime createDate;
 
   @LastModifiedDate
   private LocalDateTime updateDate;
