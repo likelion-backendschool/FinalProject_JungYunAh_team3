@@ -31,6 +31,14 @@ function PostWrite__submit(form) {
     return;
   }
 
+  form.hashTags.value = form.hashTags.value.trim();
+
+  if (form.hashTags.value.length === 0) {
+    warningModal('해시태그를 입력해주세요.');
+
+    return;
+  }
+
   PostWrite__submitDone = true;
 
   if (PostWrite__submitDone) {

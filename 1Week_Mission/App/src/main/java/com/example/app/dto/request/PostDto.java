@@ -14,4 +14,7 @@ public class PostDto {
 
   @NotBlank(message = "내용을 입력해주세요.")
   private String contentHtml;
+
+  @NotBlank(message = "해시태그를 입력해주세요.")
+  private String hashTags;
 }

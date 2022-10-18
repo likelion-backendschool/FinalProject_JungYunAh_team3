@@ -2,6 +2,11 @@
 <html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       xmlns:th="http://www.thymeleaf.org"
       layout:decorate = "~{common/layout.html}" lang="ko">
+<head>
+  <script src="https://cdn.jsdelivr.net/npm/@yaireo/tagify"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@yaireo/tagify/dist/tagify.polyfills.min.js"></script>
+  <link href="https://cdn.jsdelivr.net/npm/@yaireo/tagify/dist/tagify.css" rel="stylesheet" type="text/css" />
+</head>
 <div layout:fragment = "content" class = "container my-3 w-75">
   <link rel="stylesheet" href="https://uicdn.toast.com/editor/latest/toastui-editor.min.css" />
   <form  th:action="@{/post/write}" method="post" onsubmit="PostWrite__submit(this); return false;">
@@ -11,11 +16,28 @@
       <input type="text" name="subject" placeholder="제목을 입력해주세요." class="border w-100 my-3 p-2">
     </div>
     <div id = "editor"></div>
+    <div>
+      <input name='hashTags' value='' placeholder="태그" type="hidden">
+    </div>
     <button type="submit" class="btn btn-primary float-end mt-3">등록</button>
   </form>
 </div>
 <th:block layout:fragment = "script">
   <script src="https://uicdn.toast.com/editor/latest/toastui-editor-all.min.js"></script>
-  <script th:src="@{/js/toast.js}"></script>
+  <script th:src="@{/js/postWrite.js}"></script>
+  <script>
+    var input = document.querySelector('input[name=hashTags]');
+
+    var tagify = new Tagify(input, {
+      validate: function (tag) {
+        var max = 10;
+        if (!tagify || tagify.value.length < max) {
+          return true;
+        }
+        tag.value = '최대 ' + max + ' 개까지';
+      }
+    });
+
+  </script>
 </th:block>
 </html>
