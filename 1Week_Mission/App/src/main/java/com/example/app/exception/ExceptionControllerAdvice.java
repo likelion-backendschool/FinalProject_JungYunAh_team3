@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 @ControllerAdvice
 public class ExceptionControllerAdvice {
 
-  @ExceptionHandler({MemberException.class})
+  @ExceptionHandler({MemberException.class, PostException.class})
   public String applicationHandler(CustomException e, Model model) {
     log.error(e.getMessage());
     model.addAttribute("ErrorCode", e.getErrorCode());
