@@ -1,6 +1,7 @@
 package com.example.app.domain;
 
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import lombok.AllArgsConstructor;
@@ -26,7 +27,7 @@ import lombok.experimental.SuperBuilder;
 @ToString(callSuper = true)
 public class Post extends BaseEntity{
 
-  @ManyToOne
+  @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "authorId")
   private Member author;
 

@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 public class PostService {
 
   private final PostRepository postRepository;
+  private final PostHashTagService postHashTagService;
 
   /*
   글 등록
@@ -30,6 +31,8 @@ public class PostService {
         .contentHtml(postDto.getContentHtml())
         .build();
 
-    return postRepository.save(post);
+    Post savedPost = postRepository.save(post);
+    postHashTagService.create(savedPost, postDto.getHashTags());
+    return savedPost;
   }
 }
