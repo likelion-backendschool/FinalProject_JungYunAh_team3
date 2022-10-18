@@ -23,6 +23,7 @@ function PostWrite__submit(form) {
 
   const markdown = editor.getMarkdown();
   form.content.value = markdown.trim();
+  form.contentHtml.value = editor.getHTML();
 
   if (form.content.value.length === 0) {
     warningModal('내용을 입력해주세요.');

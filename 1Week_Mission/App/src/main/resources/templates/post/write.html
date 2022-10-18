@@ -6,6 +6,7 @@
   <link rel="stylesheet" href="https://uicdn.toast.com/editor/latest/toastui-editor.min.css" />
   <form  th:action="@{/post/write}" method="post" onsubmit="PostWrite__submit(this); return false;">
     <input type="hidden" name="content" placeholder="내용을 입력해주세요." />
+    <input type="hidden" name="contentHtml" placeholder="내용을 입력해주세요." />
     <div>
       <input type="text" name="subject" placeholder="제목을 입력해주세요." class="border w-100 my-3 p-2">
     </div>
