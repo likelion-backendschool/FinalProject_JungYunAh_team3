@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:th="http://www.thymeleaf.org"
+      layout:decorate = "~{common/layout.html}" lang="ko">
+<div layout:fragment = "content" class = "container my-3 w-75">
+  <link rel="stylesheet" href="https://uicdn.toast.com/editor/latest/toastui-editor.min.css" />
+  <form  th:action="@{/post/write}" method="post" onsubmit="PostWrite__submit(this); return false;">
+    <input type="hidden" name="content" placeholder="내용을 입력해주세요." />
+    <div>
+      <input type="text" name="subject" placeholder="제목을 입력해주세요." class="border w-100 my-3 p-2">
+    </div>
+    <div id = "editor"></div>
+    <button type="submit" class="btn btn-primary float-end mt-3">등록</button>
+  </form>
+</div>
+<th:block layout:fragment = "script">
+  <script src="https://uicdn.toast.com/editor/latest/toastui-editor-all.min.js"></script>
+  <script th:src="@{/js/toast.js}"></script>
+</th:block>
+</html>
