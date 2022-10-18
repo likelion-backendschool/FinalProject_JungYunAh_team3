@@ -9,12 +9,15 @@ import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
+/*
+UserDetailsService
+- DB 데이터를 가져오는 역할
+ */
 @Service
 @RequiredArgsConstructor
 public class CustomMemberDetailService implements UserDetailsService {
@@ -29,6 +32,6 @@ public class CustomMemberDetailService implements UserDetailsService {
     List<GrantedAuthority> authorities = new ArrayList<>();
     authorities.add(new SimpleGrantedAuthority(String.valueOf(member.getRole())));
 
-    return new User(member.getUsername(), member.getPassword(), authorities);
+    return new MemberContext(member, authorities);
   }
 }

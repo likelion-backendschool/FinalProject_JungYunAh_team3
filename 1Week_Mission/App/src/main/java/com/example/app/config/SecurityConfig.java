@@ -2,6 +2,7 @@ package com.example.app.config;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
+import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -23,7 +24,7 @@ public class SecurityConfig {
         .authorizeRequests()
         .antMatchers("/css/**","/js/**").permitAll()
         .antMatchers("/", "/member/join", "/member/login").permitAll()
-        .anyRequest().authenticated()
+        .anyRequest().hasAnyRole("MEMBER", "WRITER", "ADMIN")
         .and()
         .formLogin()
         .loginPage("/member/login")
@@ -41,5 +42,10 @@ public class SecurityConfig {
   @Bean
   public PasswordEncoder passwordEncoder() {
     return new BCryptPasswordEncoder();
+  }
+
+  @Bean
+  public AuthenticationProvider authenticationProvider() {
+    return new CustomAuthenticationProvider();
   }
 }
