@@ -1,0 +1,69 @@
+<html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:th="http://www.thymeleaf.org"
+      layout:decorate = "~{common/layout.html}" lang="ko">
+
+<div layout:fragment = "content" class = "container my-3 text-center">
+  <div class = "my-5">
+    <div>
+      <h4>로그인</h4>
+    </div>
+  </div>
+
+  <div th:if = "${param.error}" class = "d-flex justify-content-center">
+    <div class = "alert alert-danger">
+      아이디 또는 비빌번호를 다시 확인해 주세요.
+    </div>
+  </div>
+
+  <div>
+    <script type="text/javascript">
+      let MemberJoin__submitDone = false;
+
+      function MemberJoin__submit(form) {
+        if (MemberJoin__submitDone) {
+          return;
+        }
+
+        form.username.value = form.username.value.trim();
+
+        console.log(form.username.value);
+        if (form.username.value.length === 0) {
+          warningModal('아이디를 입력해주세요.');
+          form.username.focus();
+          return;
+        }
+
+        form.password.value = form.password.value.trim();
+
+        if (form.password.value.length === 0) {
+          warningModal("비밀번호를 입력해주세요.");
+          form.password.focus();
+          return;
+        }
+
+        form.submit();
+        MemberJoin__submitDone = true;
+      }
+    </script>
+
+    <form th:action="@{/member/login}" method="post" onsubmit="MemberJoin__submit(this); return false;">
+      <div class = "mb-3">
+        <label class = "form-label">아이디
+          <input autofocus type="text" name="username" class = "form-control" maxlength="50"></label>
+      </div>
+      <div class = "mb-3">
+        <label class = "form-label">비밀번호
+          <input type="password" name="password" class = "form-control" maxlength="50"></label>
+      </div>
+      <div class="grid grid-cols-2 mt-2 gap-2">
+        <button type = "submit" class = "btn btn-primary">로그인</button>
+        <a href="/member/join" class="btn btn-secondary btn-outline">회원 가입</a>
+      </div>
+    </form>
+    <div class="grid grid-cols-2 mt-2 gap-2">
+      <a href="/member/findUsername" class="btn btn-link">아이디 찾기</a>
+      <a href="#" class="btn btn-link">비밀번호 찾기</a>
+    </div>
+  </div>
+</div>
+
