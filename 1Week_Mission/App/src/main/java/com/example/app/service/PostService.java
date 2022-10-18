@@ -6,6 +6,7 @@ import com.example.app.dto.request.PostDto;
 import com.example.app.exception.ErrorType;
 import com.example.app.exception.PostException;
 import com.example.app.repository.PostRepository;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -34,5 +35,9 @@ public class PostService {
     Post savedPost = postRepository.save(post);
     postHashTagService.create(savedPost, postDto.getHashTags());
     return savedPost;
+  }
+
+  public List<Post> getList() {
+    return postRepository.findAll();
   }
 }
