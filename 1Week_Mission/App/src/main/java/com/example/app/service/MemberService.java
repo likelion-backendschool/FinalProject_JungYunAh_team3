@@ -51,14 +51,13 @@ public class MemberService {
 
     memberRepository.save(member);
 
-    sendEmail(member);
-  }
-
-  // 축하 이메일 전송
-  private void sendEmail(Member member) {
     String subject = "[멋북스] 회원 가입해주셔서 감사합니다.";
     String text = "안녕하세요. %s님! 멋북스에 오신 것을 환영합니다.<br/>".formatted(member.getNickname());
+    sendEmail(member, subject, text);
+  }
 
+  // 이메일 전송
+  private void sendEmail(Member member, String subject, String text) {
     try {
       MimeMessage mimeMessage = javaMailSender.createMimeMessage();
       MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, true, "utf-8");
@@ -87,5 +86,19 @@ public class MemberService {
     member.setNickname(memberModifyDto.getNickname());
     member.setEmail(memberModifyDto.getEmail());
     memberRepository.save(member);
+  }
+
+  /*
+  아이디 찾기
+  - 회원 이메일로 아이디 전송
+   */
+  public void findUsername(String email) {
+    Member member = memberRepository.findByEmail(email)
+        .orElseThrow(() -> new MemberException(ErrorType.NOT_FOUND));
+
+    String subject = "[멋북스] 아이디 찾기";
+    String text = "안녕하세요. %s님! 회원님의 아이디는 %s입니다.".formatted(member.getNickname(),
+        member.getUsername());
+    sendEmail(member, subject, text);
   }
 }

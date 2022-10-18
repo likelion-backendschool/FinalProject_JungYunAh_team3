@@ -69,4 +69,17 @@ public class MemberController {
     memberService.modify(memberModifyDto, member);
     return null;
   }
+
+  /*
+  아이디 찾기
+   */
+  @GetMapping("/findUsername")
+  public String findUsername() {
+    return "member/findUsername";
+  }
+
+  @PostMapping("/findUsername")
+  public void findUsername(String email) {
+    memberService.findUsername(email);
+  }
 }

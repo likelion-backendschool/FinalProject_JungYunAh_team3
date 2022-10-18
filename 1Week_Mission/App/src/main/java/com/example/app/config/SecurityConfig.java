@@ -23,7 +23,7 @@ public class SecurityConfig {
         .formLogin().disable()
         .authorizeRequests()
         .antMatchers("/css/**","/js/**").permitAll()
-        .antMatchers("/", "/member/join", "/member/login").permitAll()
+        .antMatchers("/", "/member/join", "/member/login", "/member/findUsername").permitAll()
         .anyRequest().hasAnyRole("MEMBER", "WRITER", "ADMIN")
         .and()
         .formLogin()
