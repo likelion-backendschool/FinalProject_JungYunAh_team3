@@ -1,5 +1,6 @@
 package com.example.app.service;
 
+import com.example.app.dto.request.MemberModifyDto;
 import com.example.app.exception.ErrorType;
 import com.example.app.exception.MemberException;
 import com.example.app.domain.Member;
@@ -26,6 +27,7 @@ public class MemberService {
   회원 가입
   - 아이디, 이메일 중복 체크
   - 비밀번호 일치 확인
+  - 가입 축하 이메일 전송
    */
   public void join(JoinDto joinDto) {
 
@@ -52,6 +54,7 @@ public class MemberService {
     sendEmail(member);
   }
 
+  // 축하 이메일 전송
   private void sendEmail(Member member) {
     String subject = "[멋북스] 회원 가입해주셔서 감사합니다.";
     String text = "안녕하세요. %s님! 멋북스에 오신 것을 환영합니다.<br/>".formatted(member.getNickname());
@@ -66,5 +69,23 @@ public class MemberService {
     } catch (MessagingException e) {
       e.printStackTrace();
     }
+  }
+
+  /*
+  회원 정보 수정
+  - 아이디, 이메일, 닉네임
+  - 아이디, 이메일 중복 체크
+   */
+  public void modify(MemberModifyDto memberModifyDto, Member member) {
+
+    if ((!member.getUsername().equals(memberModifyDto.getUsername()) && memberRepository.findByUsername(memberModifyDto.getUsername()).isPresent()) ||
+    (!member.getEmail().equals(memberModifyDto.getEmail()) && memberRepository.findByEmail(memberModifyDto.getEmail()).isPresent())){
+      throw new MemberException(ErrorType.DUPLICATED);
+    }
+
+    member.setUsername(memberModifyDto.getUsername());
+    member.setNickname(memberModifyDto.getNickname());
+    member.setEmail(memberModifyDto.getEmail());
+    memberRepository.save(member);
   }
 }
