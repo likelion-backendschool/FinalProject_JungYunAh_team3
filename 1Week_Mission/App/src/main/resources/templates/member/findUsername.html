@@ -1,0 +1,49 @@
+<html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:th="http://www.thymeleaf.org"
+      layout:decorate = "~{common/layout.html}" lang="ko">
+
+<div layout:fragment = "content" class = "container my-3 text-center">
+  <div class = "my-5">
+    <div>
+      <h4>아이디 찾기</h4>
+    </div>
+  </div>
+  <div>
+    <script type="text/javascript">
+      let MemberJoin__submitDone = false;
+
+      function MemberJoin__submit(form) {
+        if (MemberJoin__submitDone) {
+          return;
+        }
+
+        form.email.value = form.email.value.trim();
+
+        if (form.email.value.length === 0) {
+          warningModal("이메일을 입력해주세요.");
+          form.email.focus();
+
+          return;
+        }
+
+        MemberJoin__submitDone = true;
+
+        if (MemberJoin__submitDone) {
+          if (!confirm('해당 이메일로 아이디를 찾으시겠습니까? (이메일로 아이디가 전송됩니다.)')) {
+            return false;
+          }
+          form.submit();
+        }
+      }
+    </script>
+
+    <form th:action="@{/member/findUsername}" method="post" onsubmit="MemberJoin__submit(this); return false;">
+      <div class = "mb-3">
+        <label class = "form-label">이메일
+          <input type="email" name="email" class = "form-control" maxlength="50"></label>
+      </div>
+      <button type = "submit" class = "btn btn-primary">이메일 전송</button>
+    </form>
+  </div>
+</div>
+
