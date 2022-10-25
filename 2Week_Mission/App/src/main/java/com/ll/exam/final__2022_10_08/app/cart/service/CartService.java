@@ -5,6 +5,7 @@ import com.ll.exam.final__2022_10_08.app.cart.dto.CartItemDto;
 import com.ll.exam.final__2022_10_08.app.cart.entity.CartItem;
 import com.ll.exam.final__2022_10_08.app.cart.repository.CartRepository;
 import com.ll.exam.final__2022_10_08.app.cart.repository.CartRepositoryCustom;
+import com.ll.exam.final__2022_10_08.app.member.entity.Member;
 import com.ll.exam.final__2022_10_08.app.product.entity.Product;
 import com.ll.exam.final__2022_10_08.app.product.repository.ProductRepository;
 import java.util.List;
@@ -41,5 +42,9 @@ public class CartService {
     Product product = productRepository.findById(productId).orElseThrow(null);
     CartItem cartItem = cartRepository.findByProduct(product).orElseThrow(null);
     cartRepository.delete(cartItem);
+  }
+
+  public List<CartItem> getCartItemList(Member member) {
+    return cartRepository.findAllByMember(member);
   }
 }

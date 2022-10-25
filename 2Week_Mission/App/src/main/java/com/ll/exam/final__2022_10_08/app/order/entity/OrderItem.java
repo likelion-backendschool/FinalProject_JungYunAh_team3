@@ -50,4 +50,10 @@ public class OrderItem extends BaseEntity {
   private int refundPrice;
   private boolean isPaid;
 
+  public OrderItem(Product product) {
+    this.product = product;
+    this.price = product.getPrice();
+    this.salePrice = product.getSalePrice();
+    this.wholesalePrice = product.getWholesalePrice();
+  }
 }

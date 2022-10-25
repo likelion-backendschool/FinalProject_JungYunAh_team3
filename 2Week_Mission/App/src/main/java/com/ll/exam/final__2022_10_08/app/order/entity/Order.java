@@ -11,6 +11,7 @@ import java.util.List;
 import javax.persistence.Entity;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.Table;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -34,6 +35,7 @@ import lombok.experimental.SuperBuilder;
 @NoArgsConstructor
 @SuperBuilder
 @ToString(callSuper = true)
+@Table(name = "product_order")
 public class Order extends BaseEntity {
 
   @ManyToOne(fetch = LAZY)
@@ -50,4 +52,13 @@ public class Order extends BaseEntity {
   @OneToMany(mappedBy = "order", cascade = ALL, orphanRemoval = true)
   private List<OrderItem> orderItems = new ArrayList<>();
 
+  public void makeName() {
+    String name = orderItems.get(0).getProduct().getSubject();
+
+    if (orderItems.size() > 1) {
+      name += " 외 %d권".formatted(orderItems.size() - 1);
+    }
+
+    this.name = name;
+  }
 }
