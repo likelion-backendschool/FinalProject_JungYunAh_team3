@@ -1,6 +1,7 @@
 package com.ll.exam.final__2022_10_08.app.order.controller;
 
 import com.ll.exam.final__2022_10_08.app.base.rq.Rq;
+import com.ll.exam.final__2022_10_08.app.order.dto.OrderDto;
 import com.ll.exam.final__2022_10_08.app.order.entity.Order;
 import com.ll.exam.final__2022_10_08.app.order.service.OrderService;
 import lombok.RequiredArgsConstructor;
@@ -30,7 +31,7 @@ public class OrderController {
   @GetMapping("/{id}")
   @PreAuthorize("isAuthenticated()")
   public String showOrder(@PathVariable Long id, Model model) {
-    Order order = orderService.findById(id);
+    OrderDto order = orderService.findById(id);
     model.addAttribute("order", order);
     return "order/detail";
   }

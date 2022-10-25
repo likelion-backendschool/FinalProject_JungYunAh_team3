@@ -61,4 +61,9 @@ public class Order extends BaseEntity {
 
     this.name = name;
   }
+
+  public void addOrderItem(OrderItem orderItem) {
+    orderItem.setOrder(this);
+    orderItems.add(orderItem);
+  }
 }
