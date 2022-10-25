@@ -72,4 +72,8 @@ public class OrderService {
         .orderItems(orderItems)
         .build();
   }
+
+  public List<Order> findAll() {
+    return orderRepository.findAllByMemberId(rq.getMember().getId());
+  }
 }

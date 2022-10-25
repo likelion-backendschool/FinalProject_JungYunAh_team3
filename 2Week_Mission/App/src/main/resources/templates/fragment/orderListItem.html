@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.w3.org/1999/html">
+
+<body>
+<th:block th:fragment="orderListItem">
+  <div class="card bg-base-100 shadow-xl">
+    <div class="card-body">
+      <h2 class="card-title flex flex-wrap">
+        <a th:href="@{|/order/${order.id}|}" class="mr-auto">
+          <i class="fa-solid fa-book-open"></i>
+          <span th:text="${order.name}"></span>
+        </a>
+      </h2>
+      <a href="javascript:;" onclick="if(confirm('주문을 취소하시겠습니까?')) $(this).next().submit();" class="btn btn-sm">
+        <span class="ml-2">삭제</span>
+      </a>
+      <form th:action="@{|/order/${order.id}/cancel|}" method="POST" hidden></form>
+    </div>
+  </div>
+</th:block>
+</body>
+
+</html>

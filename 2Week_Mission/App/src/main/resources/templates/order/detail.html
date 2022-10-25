@@ -26,8 +26,13 @@
           주문자 : [[${order.member}]]
         </div>
         <div>
-          <h1>아아아아ㅏ</h1>
-          <div th:text = "${#lists.size(order.orderItems)}"></div>
+          <div th:each="orderItem : ${order.orderItems}">
+            <div>
+              제목 : [[${orderItem.product.subject}]] /
+              작가 : [[${orderItem.product.author.username}]] /
+              가격 : [[${orderItem.salePrice}]]
+            </div>
+          </div>
         </div>
       </div>
     </div>
