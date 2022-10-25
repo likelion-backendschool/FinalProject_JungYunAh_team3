@@ -76,4 +76,9 @@ public class OrderService {
   public List<Order> findAll() {
     return orderRepository.findAllByMemberId(rq.getMember().getId());
   }
+
+  public void cancelOrder(Long id) {
+    Order order = orderRepository.findById(id).orElseThrow(null);
+    orderRepository.delete(order);
+  }
 }

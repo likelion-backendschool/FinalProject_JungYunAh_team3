@@ -45,4 +45,11 @@ public class OrderController {
     model.addAttribute("orderList", orderList);
     return "order/list";
   }
+
+  @PostMapping("/{id}/cancel")
+  @PreAuthorize("isAuthenticated()")
+  public String cancelOrder(@PathVariable Long id) {
+    orderService.cancelOrder(id);
+    return "order/list";
+  }
 }
