@@ -35,4 +35,11 @@ public class CartController {
     model.addAttribute("cartItemList", cartItemList);
     return "cart/list";
   }
+
+  @PostMapping("/remove/{productId}")
+  @PreAuthorize("isAuthenticated()")
+  public String removeCartItem(@PathVariable Long productId) {
+    cartService.removeCartItem(productId);
+    return "redirect:/cart/list";
+  }
 }

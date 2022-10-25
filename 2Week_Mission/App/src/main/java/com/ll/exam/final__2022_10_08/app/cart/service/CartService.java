@@ -36,4 +36,10 @@ public class CartService {
   public List<CartItemDto> findAll() {
     return cartRepositoryCustom.findCartItem(rq.getMember());
   }
+
+  public void removeCartItem(Long productId) {
+    Product product = productRepository.findById(productId).orElseThrow(null);
+    CartItem cartItem = cartRepository.findByProduct(product).orElseThrow(null);
+    cartRepository.delete(cartItem);
+  }
 }
