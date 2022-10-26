@@ -40,7 +40,6 @@ public class OrderController {
   private final OrderService orderService;
   private final RestTemplate restTemplate = new RestTemplate();
   private final ObjectMapper objectMapper;
-  private final OrderRepository orderRepository;
 
   @PostMapping("/create")
   @PreAuthorize("isAuthenticated()")
@@ -122,9 +121,7 @@ public class OrderController {
       JsonNode successNode = responseEntity.getBody();
       model.addAttribute("orderId", successNode.get("orderId").asText());
       String secret = successNode.get("secret").asText();
-      order.setReadyStatus(OrderStatus.DONE);
-      order.setPaymentDone();
-      orderRepository.save(order);
+      orderService.successOrder(order);
       return "order/success";
     } else {
       JsonNode failNode = responseEntity.getBody();
