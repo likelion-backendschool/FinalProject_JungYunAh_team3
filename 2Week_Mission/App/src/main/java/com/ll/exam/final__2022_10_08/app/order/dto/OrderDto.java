@@ -15,5 +15,7 @@ public class OrderDto {
   private Long id;
   private LocalDateTime createDate;
   private String member;
+  private int calculatePayPrice;
+  private String name;
   private List<OrderItem> orderItems;
 }

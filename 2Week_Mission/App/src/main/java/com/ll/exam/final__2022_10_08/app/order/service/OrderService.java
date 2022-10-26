@@ -6,6 +6,7 @@ import com.ll.exam.final__2022_10_08.app.cart.service.CartService;
 import com.ll.exam.final__2022_10_08.app.order.dto.OrderDto;
 import com.ll.exam.final__2022_10_08.app.order.entity.Order;
 import com.ll.exam.final__2022_10_08.app.order.entity.OrderItem;
+import com.ll.exam.final__2022_10_08.app.order.entity.OrderStatus;
 import com.ll.exam.final__2022_10_08.app.order.repository.OrderRepository;
 import com.ll.exam.final__2022_10_08.app.product.entity.Product;
 import java.util.ArrayList;
@@ -48,6 +49,7 @@ public class OrderService {
     Order order = Order
         .builder()
         .member(rq.getMember())
+        .readyStatus(OrderStatus.READY)
         .build();
 
     for (OrderItem orderItem : orderItems) {
@@ -65,11 +67,14 @@ public class OrderService {
   public OrderDto findById(Long id) {
     Order order = orderRepository.findById(id).orElseThrow(null);
     List<OrderItem> orderItems = order.getOrderItems();
+    int calculatePayPrice = order.calculatePayPrice();
     return OrderDto.builder()
         .id(order.getId())
         .createDate(order.getCreateDate())
         .member(rq.getMember().getUsername())
         .orderItems(orderItems)
+        .calculatePayPrice(calculatePayPrice)
+        .name(order.getName())
         .build();
   }
 
@@ -80,5 +85,9 @@ public class OrderService {
   public void cancelOrder(Long id) {
     Order order = orderRepository.findById(id).orElseThrow(null);
     orderRepository.delete(order);
+  }
+
+  public Order findOrder(long id) {
+    return orderRepository.findById(id).orElseThrow(null);
   }
 }
