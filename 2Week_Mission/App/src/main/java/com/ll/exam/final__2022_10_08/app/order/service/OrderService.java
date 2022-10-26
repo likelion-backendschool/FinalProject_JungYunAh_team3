@@ -88,7 +88,9 @@ public class OrderService {
 
   public void cancelOrder(Long id) {
     Order order = orderRepository.findById(id).orElseThrow(null);
-    orderRepository.delete(order);
+    if (order.getReadyStatus().equals(OrderStatus.READY)) {
+      orderRepository.delete(order);
+    }
   }
 
   public Order findOrder(long id) {
