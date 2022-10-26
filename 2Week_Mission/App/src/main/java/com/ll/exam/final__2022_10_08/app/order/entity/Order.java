@@ -9,6 +9,8 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
@@ -42,7 +44,9 @@ public class Order extends BaseEntity {
   private Member member;
 
   private LocalDateTime payDate;
-  private boolean readyStatus;
+
+  @Enumerated(EnumType.STRING)
+  private OrderStatus readyStatus;
   private boolean isPaid;
   private boolean isCanceled;
   private boolean isRefunded;
@@ -65,5 +69,23 @@ public class Order extends BaseEntity {
   public void addOrderItem(OrderItem orderItem) {
     orderItem.setOrder(this);
     orderItems.add(orderItem);
+  }
+
+  public int calculatePayPrice() {
+    int payPrice = 0;
+
+    for (OrderItem orderItem : orderItems) {
+      payPrice += orderItem.getSalePrice();
+    }
+
+    return payPrice;
+  }
+
+  public void setPaymentDone() {
+    for (OrderItem orderItem : orderItems) {
+      orderItem.setPaymentDone();
+    }
+
+    isPaid = true;
   }
 }
