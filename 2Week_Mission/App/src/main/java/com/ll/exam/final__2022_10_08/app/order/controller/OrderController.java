@@ -74,7 +74,8 @@ public class OrderController {
   @PreAuthorize("isAuthenticated()")
   public String cancelOrder(@PathVariable Long id) {
     orderService.cancelOrder(id);
-    return "order/list";
+    return Rq.redirectWithMsg("/order/list",
+        "%d번 주문이 취소되었습니다.".formatted(id));
   }
 
   @PostConstruct
