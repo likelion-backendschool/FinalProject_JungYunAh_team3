@@ -3,6 +3,7 @@ package com.ll.exam.final__2022_10_08.app.member.service;
 import com.ll.exam.final__2022_10_08.app.AppConfig;
 import com.ll.exam.final__2022_10_08.app.base.dto.RsData;
 import com.ll.exam.final__2022_10_08.app.base.rq.Rq;
+import com.ll.exam.final__2022_10_08.app.cashLog.entity.CashLog;
 import com.ll.exam.final__2022_10_08.app.cashLog.service.CashLogService;
 import com.ll.exam.final__2022_10_08.app.email.service.EmailService;
 import com.ll.exam.final__2022_10_08.app.emailVerification.service.EmailVerificationService;
@@ -156,5 +157,16 @@ public class MemberService {
         member.setRestCash(savedMember.getRestCash() + restCash);
         cashLogService.addRestCash(member, restCash);
         return memberRepository.save(member);
+    }
+
+    @Transactional
+    public long addCash(Member member, long price) {
+        CashLog cashLog = cashLogService.addRestCash(member, price);
+
+        long newRestCash = member.getRestCash() + cashLog.getPrice();
+        member.setRestCash(newRestCash);
+        memberRepository.save(member);
+
+        return newRestCash;
     }
 }

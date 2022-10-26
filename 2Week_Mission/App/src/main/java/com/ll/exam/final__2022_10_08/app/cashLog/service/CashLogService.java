@@ -32,12 +32,12 @@ public class CashLogService {
     cashLogRepository.save(payment);
   }
 
-  public void addRestCash(Member member, long restCash) {
+  public CashLog addRestCash(Member member, long restCash) {
     CashLog cashLog = CashLog.builder()
         .member(member)
         .price((int) restCash)
         .eventType(EventType.CHARGE)
         .build();
-    cashLogRepository.save(cashLog);
+    return cashLogRepository.save(cashLog);
   }
 }

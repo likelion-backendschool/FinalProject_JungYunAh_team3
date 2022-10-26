@@ -6,6 +6,7 @@ import com.ll.exam.final__2022_10_08.app.base.rq.Rq;
 import com.ll.exam.final__2022_10_08.app.member.service.MemberService;
 import com.ll.exam.final__2022_10_08.app.order.dto.OrderDto;
 import com.ll.exam.final__2022_10_08.app.order.entity.Order;
+import com.ll.exam.final__2022_10_08.app.order.exception.ActorCanNotPayOrderException;
 import com.ll.exam.final__2022_10_08.app.order.exception.OrderIdNotMatchedException;
 import com.ll.exam.final__2022_10_08.app.order.service.OrderService;
 import java.util.Base64;
@@ -40,6 +41,7 @@ public class OrderController {
   private final RestTemplate restTemplate = new RestTemplate();
   private final ObjectMapper objectMapper;
   private final MemberService memberService;
+  private final Rq rq;
 
   @PostMapping("/create")
   @PreAuthorize("isAuthenticated()")
@@ -138,5 +140,19 @@ public class OrderController {
     model.addAttribute("message", message);
     model.addAttribute("code", code);
     return "order/fail";
+  }
+
+  @PostMapping("/{id}/payByRestCashOnly")
+  @PreAuthorize("isAuthenticated()")
+  public String payByRestCashOnly(@PathVariable long id) {
+    Order order = orderService.findOrder(id);
+
+    if (orderService.actorCanPayment(order) == false) {
+      throw new ActorCanNotPayOrderException();
+    }
+
+    orderService.payByRestCashOnly(order);
+
+    return Rq.redirectWithMsg("/order/" + order.getId(), "예치금으로 결제되었습니다.".formatted(order.getId()));
   }
 }

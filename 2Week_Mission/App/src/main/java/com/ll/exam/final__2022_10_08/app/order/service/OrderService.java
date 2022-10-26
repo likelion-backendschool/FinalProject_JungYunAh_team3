@@ -4,6 +4,8 @@ import com.ll.exam.final__2022_10_08.app.base.rq.Rq;
 import com.ll.exam.final__2022_10_08.app.cart.entity.CartItem;
 import com.ll.exam.final__2022_10_08.app.cart.service.CartService;
 import com.ll.exam.final__2022_10_08.app.cashLog.service.CashLogService;
+import com.ll.exam.final__2022_10_08.app.member.entity.Member;
+import com.ll.exam.final__2022_10_08.app.member.service.MemberService;
 import com.ll.exam.final__2022_10_08.app.myBook.service.MyBookService;
 import com.ll.exam.final__2022_10_08.app.order.dto.OrderDto;
 import com.ll.exam.final__2022_10_08.app.order.entity.Order;
@@ -27,6 +29,7 @@ public class OrderService {
   private final Rq rq;
   private final MyBookService myBookService;
   private final CashLogService cashLogService;
+  private final MemberService memberService;
 
   @Transactional
   public Order createOrder() {
@@ -106,5 +109,25 @@ public class OrderService {
     Order savedOrder = orderRepository.save(order);
     myBookService.save(savedOrder.getOrderItems());
     cashLogService.successOrder(order.calculatePayPrice());
+  }
+
+  public boolean actorCanPayment(Order order) {
+    return rq.getMember().getId().equals(order.getMember().getId());
+  }
+
+  public void payByRestCashOnly(Order order) {
+    Member buyer = order.getMember();
+
+    long restCash = buyer.getRestCash();
+    int payPrice = order.calculatePayPrice();
+
+    if (payPrice > restCash) {
+      throw new RuntimeException("예치금이 부족합니다.");
+    }
+
+    memberService.addCash(buyer, payPrice * -1);
+
+    order.setPaymentDone();
+    orderRepository.save(order);
   }
 }
