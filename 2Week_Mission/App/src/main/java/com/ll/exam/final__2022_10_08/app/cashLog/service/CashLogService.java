@@ -4,6 +4,7 @@ import com.ll.exam.final__2022_10_08.app.base.rq.Rq;
 import com.ll.exam.final__2022_10_08.app.cashLog.entity.CashLog;
 import com.ll.exam.final__2022_10_08.app.cashLog.entity.EventType;
 import com.ll.exam.final__2022_10_08.app.cashLog.repository.CashLogRepository;
+import com.ll.exam.final__2022_10_08.app.member.entity.Member;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -29,5 +30,14 @@ public class CashLogService {
         .build();
     cashLogRepository.save(charge);
     cashLogRepository.save(payment);
+  }
+
+  public void addRestCash(Member member, long restCash) {
+    CashLog cashLog = CashLog.builder()
+        .member(member)
+        .price((int) restCash)
+        .eventType(EventType.CHARGE)
+        .build();
+    cashLogRepository.save(cashLog);
   }
 }

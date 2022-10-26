@@ -3,11 +3,10 @@ package com.ll.exam.final__2022_10_08.app.order.controller;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ll.exam.final__2022_10_08.app.base.rq.Rq;
+import com.ll.exam.final__2022_10_08.app.member.service.MemberService;
 import com.ll.exam.final__2022_10_08.app.order.dto.OrderDto;
 import com.ll.exam.final__2022_10_08.app.order.entity.Order;
-import com.ll.exam.final__2022_10_08.app.order.entity.OrderStatus;
 import com.ll.exam.final__2022_10_08.app.order.exception.OrderIdNotMatchedException;
-import com.ll.exam.final__2022_10_08.app.order.repository.OrderRepository;
 import com.ll.exam.final__2022_10_08.app.order.service.OrderService;
 import java.util.Base64;
 import java.util.HashMap;
@@ -40,6 +39,7 @@ public class OrderController {
   private final OrderService orderService;
   private final RestTemplate restTemplate = new RestTemplate();
   private final ObjectMapper objectMapper;
+  private final MemberService memberService;
 
   @PostMapping("/create")
   @PreAuthorize("isAuthenticated()")
@@ -54,7 +54,9 @@ public class OrderController {
   @PreAuthorize("isAuthenticated()")
   public String showOrder(@PathVariable Long id, Model model) {
     OrderDto order = orderService.findById(id);
+    Long restCash = memberService.getRestCash();
     model.addAttribute("order", order);
+    model.addAttribute("restCash", restCash);
     return "order/detail";
   }
 

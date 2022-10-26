@@ -18,4 +18,7 @@ public class OrderDto {
   private int calculatePayPrice;
   private String name;
   private List<OrderItem> orderItems;
+  private boolean isPayable;
+  private boolean isPaid;
+  private String readyStatus;
 }

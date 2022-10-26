@@ -79,6 +79,9 @@ public class OrderService {
         .orderItems(orderItems)
         .calculatePayPrice(calculatePayPrice)
         .name(order.getName())
+        .isPayable(order.isPayable())
+        .isPaid(order.isPaid())
+        .readyStatus(String.valueOf(order.getReadyStatus()))
         .build();
   }
 

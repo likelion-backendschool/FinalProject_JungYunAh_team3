@@ -53,6 +53,41 @@
                     <svg width="100" height="100" th:data-jdenticon-value="${@rq.member.jdenticon}"></svg>
                 </div>
 
+                <div class="form-control">
+                    <label class="label">
+                        <span class="label-text">예치금</span>
+                    </label>
+                    <div class="badge badge-primary" th:text="${restCash}"></div>
+                </div>
+                <script>
+                    let RestCash__submitDone = false;
+
+                    function RestCash__submit(form) {
+                        if (RestCash__submitDone) {
+                            return;
+                        }
+
+                        if (form.restCash.value == null || form.restCash.value == 0) {
+                            warningModal("충전할 예치금액을 입력해주세요.");
+                            form.restCash.focus();
+                            return;
+                        }
+
+                        form.submit();
+                        RestCash__submitDone = true;
+                    }
+                </script>
+                <form th:action = "@{/member/charge}" method="POST" class="flex flex-col gap-3"
+                      onsubmit="RestCash__submit(this); return false;">
+                    <div class="form-control">
+                        <label class="label">
+                            <span class="label-text">충전할 예치금</span>
+                        </label>
+                        <input type="number" name="restCash" placeholder="충전할 예치금" class="input input-bordered" min="0">
+                    </div>
+                    <input class="btn btn-primary" type="submit" value="충전">
+                </form>
+
                 <div class="grid grid-cols-2 mt-2 gap-2">
                     <a href="/member/modifyPassword" class="btn btn-secondary btn-outline">비밀번호 변경</a>
                     <a th:unless="${@rq.hasAuthority('AUTHOR')}" href="/member/beAuthor" class="btn btn-primary">작가활동 시작</a>
