@@ -30,7 +30,7 @@ public class NotProdInitData {
 
             Member member1 = memberService.join("user1", "1234", "user1@test.com", null);
             Member member2 = memberService.join("user2", "1234", "user2@test.com", "홍길순");
-
+            member1 = memberService.addRestCash(member1, 100000L);
             postService.write(
                     member1,
                     "자바를 우아하게 사용하는 방법",

@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.w3.org/1999/html">
+
+<body>
+<th:block th:fragment="cartItemListItem">
+  <div class="card bg-base-100 shadow-xl">
+    <a th:href="@{|/product/${cartItem.id}|}" class="block">
+      <figure>
+        <svg width="200" height="200" th:data-jdenticon-value="${cartItem.jdenticon}"></svg>
+      </figure>
+    </a>
+    <div class="card-body">
+      <h2 class="card-title flex flex-wrap">
+        <a th:href="@{|/product/${cartItem.id}|}" class="mr-auto">
+          <i class="fa-solid fa-book-open"></i>
+          <span th:text="${cartItem.subject}"></span>
+        </a>
+        <div class="flex">
+          <div th:text="${cartItem.author}"></div>
+        </div>
+      </h2>
+      <div th:text="|￦ ${@ut.nf(cartItem.price)}|"></div>
+      <div class="card-actions justify-end">
+        <a th:href="@{|/product/${cartItem.id}|}" class="btn btn-sm">
+          <i class="fa-solid fa-eye"></i>
+          <span class="ml-2">보기</span>
+        </a>
+      </div>
+      <a href="javascript:;" onclick="if(confirm('목록에서 삭제하시겠습니까?')) $(this).next().submit();" class="btn btn-sm">
+        <span class="ml-2">삭제</span>
+      </a>
+      <form th:action="@{|/cart/remove/${cartItem.id}|}" method="POST" hidden></form>
+    </div>
+  </div>
+</th:block>
+</body>
+
+</html>

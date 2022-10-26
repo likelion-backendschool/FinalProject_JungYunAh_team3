@@ -92,7 +92,9 @@ public class MemberController {
 
     @PreAuthorize("isAuthenticated()")
     @GetMapping("/profile")
-    public String profile() {
+    public String profile(Model model) {
+        Long restCash = memberService.getRestCash();
+        model.addAttribute("restCash", restCash);
         return "member/profile";
     }
 
@@ -133,5 +135,12 @@ public class MemberController {
         }
 
         return Rq.redirectWithMsg("/", rsData);
+    }
+
+    @PostMapping("/charge")
+    @PreAuthorize("isAuthenticated()")
+    public String charge(int restCash) {
+        memberService.addRestCash(rq.getMember(), Long.valueOf(restCash));
+        return Rq.redirectWithMsg("/member/profile", "충전이 완료되었습니다.");
     }
 }
