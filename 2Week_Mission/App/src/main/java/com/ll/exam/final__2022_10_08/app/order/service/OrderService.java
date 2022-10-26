@@ -13,6 +13,8 @@ import com.ll.exam.final__2022_10_08.app.order.entity.OrderItem;
 import com.ll.exam.final__2022_10_08.app.order.entity.OrderStatus;
 import com.ll.exam.final__2022_10_08.app.order.repository.OrderRepository;
 import com.ll.exam.final__2022_10_08.app.product.entity.Product;
+import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -95,7 +97,15 @@ public class OrderService {
   public void cancelOrder(Long id) {
     Order order = orderRepository.findById(id).orElseThrow(null);
     if (order.getReadyStatus().equals(OrderStatus.READY)) {
-      orderRepository.delete(order);
+      order.setCanceled(true);
+      order.setReadyStatus(OrderStatus.CANCEL);
+      orderRepository.save(order);
+    } else if (order.getReadyStatus().equals(OrderStatus.DONE) && ChronoUnit.MINUTES.between(order.getPayDate(),
+        LocalDateTime.now()) <= 10){
+      order.setRefunded(true);
+      int calculatePayPrice = order.calculatePayPrice();
+      cashLogService.refund(calculatePayPrice);
+      memberService.addRestCash(rq.getMember(), (long) calculatePayPrice);
     }
   }
 
@@ -106,6 +116,7 @@ public class OrderService {
   public void successOrder(Order order) {
     order.setReadyStatus(OrderStatus.DONE);
     order.setPaymentDone();
+    order.setPayDate(LocalDateTime.now());
     Order savedOrder = orderRepository.save(order);
     myBookService.save(savedOrder.getOrderItems());
     cashLogService.successOrder(order.calculatePayPrice());
@@ -125,9 +136,10 @@ public class OrderService {
       throw new RuntimeException("예치금이 부족합니다.");
     }
 
-    memberService.addCash(buyer, payPrice * -1);
+    memberService.addRestCash(buyer, (long) (payPrice * -1));
 
     order.setPaymentDone();
+    order.setReadyStatus(OrderStatus.DONE);
     orderRepository.save(order);
   }
 }

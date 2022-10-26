@@ -158,15 +158,4 @@ public class MemberService {
         cashLogService.addRestCash(member, restCash);
         return memberRepository.save(member);
     }
-
-    @Transactional
-    public long addCash(Member member, long price) {
-        CashLog cashLog = cashLogService.addRestCash(member, price);
-
-        long newRestCash = member.getRestCash() + cashLog.getPrice();
-        member.setRestCash(newRestCash);
-        memberRepository.save(member);
-
-        return newRestCash;
-    }
 }

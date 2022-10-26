@@ -40,4 +40,13 @@ public class CashLogService {
         .build();
     return cashLogRepository.save(cashLog);
   }
+
+  public void refund(int calculatePayPrice) {
+    CashLog cashLog = CashLog.builder()
+        .member(rq.getMember())
+        .price(calculatePayPrice)
+        .eventType(EventType.REBATE_CHARGE)
+        .build();
+    cashLogRepository.save(cashLog);
+  }
 }
