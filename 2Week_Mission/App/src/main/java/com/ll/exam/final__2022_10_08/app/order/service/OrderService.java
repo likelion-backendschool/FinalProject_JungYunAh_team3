@@ -3,6 +3,7 @@ package com.ll.exam.final__2022_10_08.app.order.service;
 import com.ll.exam.final__2022_10_08.app.base.rq.Rq;
 import com.ll.exam.final__2022_10_08.app.cart.entity.CartItem;
 import com.ll.exam.final__2022_10_08.app.cart.service.CartService;
+import com.ll.exam.final__2022_10_08.app.cashLog.service.CashLogService;
 import com.ll.exam.final__2022_10_08.app.myBook.service.MyBookService;
 import com.ll.exam.final__2022_10_08.app.order.dto.OrderDto;
 import com.ll.exam.final__2022_10_08.app.order.entity.Order;
@@ -25,6 +26,7 @@ public class OrderService {
   private final CartService cartService;
   private final Rq rq;
   private final MyBookService myBookService;
+  private final CashLogService cashLogService;
 
   @Transactional
   public Order createOrder() {
@@ -98,5 +100,6 @@ public class OrderService {
     order.setPaymentDone();
     Order savedOrder = orderRepository.save(order);
     myBookService.save(savedOrder.getOrderItems());
+    cashLogService.successOrder(order.calculatePayPrice());
   }
 }
