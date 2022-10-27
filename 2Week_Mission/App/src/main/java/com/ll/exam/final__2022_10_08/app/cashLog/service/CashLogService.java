@@ -21,23 +21,32 @@ public class CashLogService {
     CashLog charge = CashLog.builder()
         .member(rq.getMember())
         .price(calculatePayPrice)
-        .eventType(EventType.CHARGE)
+        .eventType(EventType.충전)
         .build();
     CashLog payment = CashLog.builder()
         .member(rq.getMember())
         .price(calculatePayPrice)
-        .eventType(EventType.PAYMENT)
+        .eventType(EventType.결제)
         .build();
     cashLogRepository.save(charge);
     cashLogRepository.save(payment);
   }
 
-  public CashLog addRestCash(Member member, long restCash) {
-    CashLog cashLog = CashLog.builder()
-        .member(member)
-        .price((int) restCash)
-        .eventType(EventType.CHARGE)
-        .build();
+  public CashLog updateRestCash(Member member, long restCash) {
+    CashLog cashLog ;
+    if (restCash > 0) {
+      cashLog = CashLog.builder()
+          .member(member)
+          .price((int) restCash)
+          .eventType(EventType.충전)
+          .build();
+    } else {
+      cashLog = CashLog.builder()
+          .member(member)
+          .price((int) restCash)
+          .eventType(EventType.결제)
+          .build();
+    }
     return cashLogRepository.save(cashLog);
   }
 
@@ -45,7 +54,7 @@ public class CashLogService {
     CashLog cashLog = CashLog.builder()
         .member(rq.getMember())
         .price(calculatePayPrice)
-        .eventType(EventType.REBATE_CHARGE)
+        .eventType(EventType.환불_충전)
         .build();
     cashLogRepository.save(cashLog);
   }
