@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.w3.org/1999/html">
+
+<body>
+<th:block th:fragment="myBookListItem">
+  <div class="card bg-base-100 shadow-xl">
+    <a th:href="@{|/product/${myBook.id}|}" class="block">
+      <figure>
+        <svg width="200" height="200" th:data-jdenticon-value="${myBook.jdenticon}"></svg>
+      </figure>
+    </a>
+    <div class="card-body">
+      <h2 class="card-title flex flex-wrap">
+        <a th:href="@{|/product/${myBook.id}|}" class="mr-auto">
+          <i class="fa-solid fa-book-open"></i>
+          <span th:text="${myBook.subject}"></span>
+        </a>
+        <div class="flex">
+          <div th:text="${myBook.author}"></div>
+        </div>
+      </h2>
+      <div th:text="|￦ ${@ut.nf(myBook.price)}|"></div>
+      <div class="card-actions justify-end">
+        <a th:href="@{|/product/${myBook.id}|}" class="btn btn-sm">
+          <i class="fa-solid fa-eye"></i>
+          <span class="ml-2">보기</span>
+        </a>
+      </div>
+    </div>
+  </div>
+</th:block>
+</body>
+
+</html>

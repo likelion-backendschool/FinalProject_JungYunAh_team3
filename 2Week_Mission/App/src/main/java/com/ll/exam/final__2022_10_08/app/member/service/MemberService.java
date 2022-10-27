@@ -2,6 +2,9 @@ package com.ll.exam.final__2022_10_08.app.member.service;
 
 import com.ll.exam.final__2022_10_08.app.AppConfig;
 import com.ll.exam.final__2022_10_08.app.base.dto.RsData;
+import com.ll.exam.final__2022_10_08.app.base.rq.Rq;
+import com.ll.exam.final__2022_10_08.app.cashLog.entity.CashLog;
+import com.ll.exam.final__2022_10_08.app.cashLog.service.CashLogService;
 import com.ll.exam.final__2022_10_08.app.email.service.EmailService;
 import com.ll.exam.final__2022_10_08.app.emailVerification.service.EmailVerificationService;
 import com.ll.exam.final__2022_10_08.app.member.entity.Member;
@@ -13,7 +16,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -29,6 +31,8 @@ public class MemberService {
     private final PasswordEncoder passwordEncoder;
     private final EmailVerificationService emailVerificationService;
     private final EmailService emailService;
+    private final Rq rq;
+    private final CashLogService cashLogService;
 
     @Transactional
     public Member join(String username, String password, String email, String nickname) {
@@ -140,5 +144,18 @@ public class MemberService {
         SecurityContext context = SecurityContextHolder.createEmptyContext();
         context.setAuthentication(authentication);
         SecurityContextHolder.setContext(context);
+    }
+
+    public Long getRestCash() {
+        Member member = memberRepository.findById(rq.getMember().getId()).orElseThrow(null);
+        return member.getRestCash();
+    }
+
+    @Transactional
+    public Member addRestCash(Member member, Long restCash) {
+        Member savedMember = memberRepository.findById(member.getId()).orElseThrow(null);
+        member.setRestCash(savedMember.getRestCash() + restCash);
+        cashLogService.addRestCash(member, restCash);
+        return memberRepository.save(member);
     }
 }
