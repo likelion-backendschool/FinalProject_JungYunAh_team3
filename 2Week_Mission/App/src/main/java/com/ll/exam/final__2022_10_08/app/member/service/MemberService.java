@@ -155,7 +155,13 @@ public class MemberService {
     public Member addRestCash(Member member, Long restCash) {
         Member savedMember = memberRepository.findById(member.getId()).orElseThrow(null);
         member.setRestCash(savedMember.getRestCash() + restCash);
-        cashLogService.addRestCash(member, restCash);
+        cashLogService.updateRestCash(member, restCash);
+        return memberRepository.save(member);
+    }
+
+    public Member refundRestCash(Member member, Long restCash) {
+        Member savedMember = memberRepository.findById(member.getId()).orElseThrow(null);
+        member.setRestCash(savedMember.getRestCash() + restCash);
         return memberRepository.save(member);
     }
 }

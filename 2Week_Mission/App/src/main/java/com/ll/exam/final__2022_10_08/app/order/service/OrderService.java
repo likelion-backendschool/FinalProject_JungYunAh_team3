@@ -100,12 +100,14 @@ public class OrderService {
       order.setCanceled(true);
       order.setReadyStatus(OrderStatus.CANCEL);
       orderRepository.save(order);
-    } else if (order.getReadyStatus().equals(OrderStatus.DONE) && ChronoUnit.MINUTES.between(order.getPayDate(),
-        LocalDateTime.now()) <= 10){
+    } else if (order.getReadyStatus().equals(OrderStatus.DONE)
+        && ChronoUnit.MINUTES.between(order.getPayDate(), LocalDateTime.now()) <= 10){
       order.setRefunded(true);
+      order.setReadyStatus(OrderStatus.CANCEL);
+      orderRepository.save(order);
       int calculatePayPrice = order.calculatePayPrice();
       cashLogService.refund(calculatePayPrice);
-      memberService.addRestCash(rq.getMember(), (long) calculatePayPrice);
+      memberService.refundRestCash(rq.getMember(), (long) calculatePayPrice);
     }
   }
 
@@ -140,6 +142,7 @@ public class OrderService {
 
     order.setPaymentDone();
     order.setReadyStatus(OrderStatus.DONE);
+    order.setPayDate(LocalDateTime.now());
     orderRepository.save(order);
   }
 }
