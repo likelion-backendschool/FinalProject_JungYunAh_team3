@@ -94,7 +94,7 @@ public class OrderController {
 
   private final String SECRET_KEY = "test_sk_YZ1aOwX7K8mLGDD20L9ryQxzvNPG";
 
-  @RequestMapping("/{id}/pay")
+  @RequestMapping("/{id}/success")
   public String confirmPayment(@PathVariable long id, @RequestParam String paymentKey,
       @RequestParam String orderId, @RequestParam Long amount, Model model) throws Exception {
 
