@@ -5,7 +5,13 @@ import com.ll.exam.final__2022_10_08.app.cart.dto.CartItemDto;
 import com.ll.exam.final__2022_10_08.app.cart.entity.CartItem;
 import com.ll.exam.final__2022_10_08.app.cart.repository.CartRepository;
 import com.ll.exam.final__2022_10_08.app.cart.repository.CartRepositoryCustom;
+import com.ll.exam.final__2022_10_08.app.exception.CartException;
+import com.ll.exam.final__2022_10_08.app.exception.ErrorType;
+import com.ll.exam.final__2022_10_08.app.exception.ProductException;
 import com.ll.exam.final__2022_10_08.app.member.entity.Member;
+import com.ll.exam.final__2022_10_08.app.myBook.dto.MyBookDto;
+import com.ll.exam.final__2022_10_08.app.myBook.repository.MyBookRepository;
+import com.ll.exam.final__2022_10_08.app.myBook.repository.MyBookRepositoryCustom;
 import com.ll.exam.final__2022_10_08.app.product.entity.Product;
 import com.ll.exam.final__2022_10_08.app.product.repository.ProductRepository;
 import java.util.List;
@@ -21,10 +27,30 @@ public class CartService {
   private final ProductRepository productRepository;
   private final CartRepository cartRepository;
   private final CartRepositoryCustom cartRepositoryCustom;
+  private final MyBookRepositoryCustom myBookRepositoryCustom;
   private final Rq rq;
 
   public void addCartItem(Long productId) {
-    Product product = productRepository.findById(productId).orElseThrow(null);
+    Product product = productRepository.findById(productId)
+        .orElseThrow(() -> new ProductException(ErrorType.NOT_FOUND));
+
+    // 장바구니 중복 체크
+    List<CartItemDto> cartItemList = cartRepositoryCustom.findCartItem(rq.getMember());
+
+    for (CartItemDto cartItem : cartItemList) {
+      if (cartItem.getId().equals(product.getId())) {
+        throw new CartException(ErrorType.DUPLICATED);
+      }
+    }
+
+    // 내 책 중복 체크
+    List<MyBookDto> myBookList = myBookRepositoryCustom.findMyBook(rq.getMember());
+
+    for (MyBookDto myBook : myBookList) {
+      if (myBook.getId().equals(product.getId())) {
+        throw new CartException(ErrorType.DUPLICATED);
+      }
+    }
 
     CartItem cartItem = CartItem.builder()
         .member(rq.getMember())
