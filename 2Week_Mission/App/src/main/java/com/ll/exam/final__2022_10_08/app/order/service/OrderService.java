@@ -4,6 +4,8 @@ import com.ll.exam.final__2022_10_08.app.base.rq.Rq;
 import com.ll.exam.final__2022_10_08.app.cart.entity.CartItem;
 import com.ll.exam.final__2022_10_08.app.cart.service.CartService;
 import com.ll.exam.final__2022_10_08.app.cashLog.service.CashLogService;
+import com.ll.exam.final__2022_10_08.app.exception.ErrorType;
+import com.ll.exam.final__2022_10_08.app.exception.OrderException;
 import com.ll.exam.final__2022_10_08.app.member.entity.Member;
 import com.ll.exam.final__2022_10_08.app.member.service.MemberService;
 import com.ll.exam.final__2022_10_08.app.myBook.service.MyBookService;
@@ -37,6 +39,10 @@ public class OrderService {
   public Order createOrder() {
 
     List<CartItem> cartItems = cartService.getCartItemList(rq.getMember());
+
+    if (cartItems.isEmpty()) {
+      throw new OrderException(ErrorType.NOT_FOUND);
+    }
 
     List<OrderItem> orderItems = new ArrayList<>();
 
@@ -95,7 +101,7 @@ public class OrderService {
   }
 
   public void cancelOrder(Long id) {
-    Order order = orderRepository.findById(id).orElseThrow(null);
+    Order order = orderRepository.findById(id).orElseThrow(() -> new OrderException(ErrorType.NOT_FOUND));
     if (order.getReadyStatus().equals(OrderStatus.READY)) {
       order.setCanceled(true);
       order.setReadyStatus(OrderStatus.CANCEL);
@@ -108,7 +114,14 @@ public class OrderService {
       int calculatePayPrice = order.calculatePayPrice();
       cashLogService.refund(calculatePayPrice);
       memberService.refundRestCash(rq.getMember(), (long) calculatePayPrice);
+      myBookService.removeMyBook(order.getOrderItems());
     }
+
+    List<OrderItem> orderItems = order.getOrderItems();
+    for (OrderItem orderItem : orderItems) {
+      cartService.addCartItem(orderItem.getProduct().getId());
+    }
+
   }
 
   public Order findOrder(long id) {
@@ -143,6 +156,7 @@ public class OrderService {
     order.setPaymentDone();
     order.setReadyStatus(OrderStatus.DONE);
     order.setPayDate(LocalDateTime.now());
-    orderRepository.save(order);
+    Order savedOrder = orderRepository.save(order);
+    myBookService.save(savedOrder.getOrderItems());
   }
 }
